@@ -268,7 +268,6 @@ class DemoDataSeeder extends Seeder
         $faker = fake();
         $invoices = collect();
         $statuses = InvoiceStatus::cases();
-        $invoiceNumber = 2001;
 
         foreach ($orders->values() as $index => $order) {
             $status = $statuses[$index % count($statuses)];
@@ -278,7 +277,7 @@ class DemoDataSeeder extends Seeder
 
             $invoices->push(Invoice::create([
                 'order_id' => $order->id,
-                'invoice_number' => sprintf('INV-%05d', $invoiceNumber),
+                'invoice_number' => $this->generateInvoiceNumber($issuedAt),
                 'status' => $status->value,
                 'total_amount' => $total,
                 'issued_at' => $issuedAt,
@@ -287,8 +286,6 @@ class DemoDataSeeder extends Seeder
                 'created_at' => $issuedAt,
                 'updated_at' => $issuedAt,
             ]));
-
-            $invoiceNumber++;
         }
 
         $extraOrder = $orders->first();
@@ -296,7 +293,7 @@ class DemoDataSeeder extends Seeder
             $issuedAt = Carbon::instance($faker->dateTimeBetween('-2 months', 'now'));
             $invoices->push(Invoice::create([
                 'order_id' => $extraOrder->id,
-                'invoice_number' => sprintf('INV-%05d', $invoiceNumber),
+                'invoice_number' => $this->generateInvoiceNumber($issuedAt),
                 'status' => InvoiceStatus::Issued->value,
                 'total_amount' => $faker->randomFloat(2, 500, 4000),
                 'issued_at' => $issuedAt,
@@ -308,6 +305,17 @@ class DemoDataSeeder extends Seeder
         }
 
         return $invoices;
+    }
+
+    private function generateInvoiceNumber(Carbon $issuedAt): string
+    {
+        $prefix = $issuedAt->format('Ymd');
+
+        do {
+            $number = sprintf('INV-%s-%04d', $prefix, random_int(1, 9999));
+        } while (Invoice::where('invoice_number', $number)->exists());
+
+        return $number;
     }
 
     private function seedPayments(Collection $invoices, int $createdBy): void

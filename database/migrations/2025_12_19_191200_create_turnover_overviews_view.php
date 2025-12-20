@@ -7,6 +7,8 @@ return new class extends Migration
 {
     public function up(): void
     {
+        DB::statement('DROP VIEW IF EXISTS turnover_overviews');
+
         $driver = DB::getDriverName();
 
         if ($driver === 'pgsql') {
