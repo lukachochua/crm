@@ -139,6 +139,12 @@ Scope is enforced in policies (not permissions):
 - `hr_manager` and `department_manager` are scoped by department and/or direct manager assignment.
 - The scope check derives the manager's employee record and compares department or `manager_user_id`.
 
+### Traits Used
+- `app/Policies/Hr/Concerns/ScopesHrAccess.php` (new): shared HR policy scoping helpers.
+- `app/Models/Concerns/EnforcesStatusTransitions.php` (existing): enforces status transitions for HR status fields.
+- `app/Models/Concerns/AssignsCreator.php` (existing): sets `created_by` on engagement surveys.
+- `app/Observers/Concerns/LogsDeletion.php` (existing): standard deletion audit logging for HR observers.
+
 ## 6) Audit Logging
 
 Audit log entries are written to the shared `audit_logs` table using `AuditLogger`:
