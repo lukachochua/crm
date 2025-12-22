@@ -16,6 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         $roles = [
+            'superadmin' => Permissions::all(),
             'Sales' => array_merge(
                 $this->fullAccess('applications'),
                 $this->fullAccess('orders'),
@@ -45,6 +46,66 @@ class RolesAndPermissionsSeeder extends Seeder
                 $this->fullAccess('turnover')
             ),
             'Admin' => Permissions::all(),
+            'hr_admin' => array_merge(
+                $this->fullAccess('departments'),
+                $this->fullAccess('positions'),
+                $this->fullAccess('branches'),
+                $this->fullAccess('contract_types'),
+                $this->fullAccess('employees'),
+                $this->fullAccess('employee_documents'),
+                $this->fullAccess('kpi_templates'),
+                $this->fullAccess('kpi_cycles'),
+                $this->fullAccess('kpi_reports'),
+                $this->fullAccess('training_sessions'),
+                $this->fullAccess('training_participants'),
+                $this->fullAccess('candidates'),
+                $this->fullAccess('onboarding_templates'),
+                $this->fullAccess('employee_onboardings'),
+                $this->fullAccess('feedback_cycles'),
+                $this->fullAccess('feedback_requests'),
+                $this->fullAccess('engagement_surveys'),
+                $this->fullAccess('survey_submissions')
+            ),
+            'hr_manager' => array_merge(
+                $this->fullAccess('employees'),
+                $this->fullAccess('employee_documents'),
+                $this->fullAccess('kpi_cycles'),
+                $this->fullAccess('kpi_reports'),
+                $this->fullAccess('training_sessions'),
+                $this->fullAccess('training_participants'),
+                $this->fullAccess('candidates'),
+                $this->fullAccess('employee_onboardings'),
+                $this->fullAccess('feedback_requests'),
+                $this->fullAccess('engagement_surveys'),
+                $this->fullAccess('survey_submissions'),
+                $this->viewAccess('departments'),
+                $this->viewAccess('positions'),
+                $this->viewAccess('branches'),
+                $this->viewAccess('contract_types'),
+                $this->viewAccess('kpi_templates'),
+                $this->viewAccess('onboarding_templates'),
+                $this->viewAccess('feedback_cycles')
+            ),
+            'department_manager' => array_merge(
+                $this->viewAccess('departments'),
+                $this->viewAccess('positions'),
+                $this->viewAccess('branches'),
+                $this->viewAccess('contract_types'),
+                $this->viewAccess('employees'),
+                $this->viewAccess('employee_documents'),
+                $this->viewAccess('kpi_templates'),
+                $this->viewAccess('kpi_cycles'),
+                $this->viewAccess('training_sessions'),
+                $this->viewAccess('candidates'),
+                $this->viewAccess('onboarding_templates'),
+                $this->viewAccess('feedback_cycles'),
+                $this->viewAccess('engagement_surveys'),
+                $this->viewUpdateAccess('kpi_reports'),
+                $this->viewUpdateAccess('training_participants'),
+                $this->viewUpdateAccess('employee_onboardings'),
+                $this->viewUpdateAccess('feedback_requests'),
+                $this->viewUpdateAccess('survey_submissions')
+            ),
         ];
 
         foreach ($roles as $roleName => $permissions) {
@@ -64,5 +125,13 @@ class RolesAndPermissionsSeeder extends Seeder
     private function viewAccess(string $entity): array
     {
         return [Permissions::permission($entity, 'view')];
+    }
+
+    private function viewUpdateAccess(string $entity): array
+    {
+        return [
+            Permissions::permission($entity, 'view'),
+            Permissions::permission($entity, 'update'),
+        ];
     }
 }
