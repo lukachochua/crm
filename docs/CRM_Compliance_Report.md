@@ -1,7 +1,7 @@
 # CRM Compliance Report
 
 ## Baseline
-- Source of truth: docs/CRM.md
+- Source of truth: docs/CRM_Technical_Reference.md
 - Scope: Laravel 12 CRM implementation in this repository
 
 ## Summary
@@ -64,14 +64,14 @@ Compliant.
 
 ## Deviations / Additions
 
-### Additional Export Support (Not in CRM.md)
+### Additional Export Support (Not in CRM_Technical_Reference.md)
 Added to support Filament export functionality.
 - Exporters: app/Filament/Exports/Crm/*.php
 - Exports table migration: database/migrations/2025_12_19_191300_create_exports_table.php
 - Notifications table migration: database/migrations/2025_12_19_191305_create_notifications_table.php
 
 ### Vehicle Status Values
-CRM.md does not define a vehicle status enum. The UI uses specific values:
+CRM_Technical_Reference.md does not define a vehicle status enum. The UI uses specific values:
 - available, reserved, sold
 - Implemented in app/Filament/Resources/Crm/VehicleResource.php
 

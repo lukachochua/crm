@@ -1,10 +1,17 @@
-# HR Module - Technical Implementation Guide
+# HR Module Overview and Implementation
 
-This document describes the HR module implementation inside the existing Laravel 12 + Filament v3 CRM codebase. The HR design is locked and implemented as a separate bounded context that integrates with the CRM infrastructure without introducing CRM dependencies on HR models.
+This document describes the HR module inside the CRM codebase. HR is a separate bounded context that integrates with shared infrastructure (users, permissions, audit logging) without CRM models referencing HR tables.
 
-## 1) Architecture Fit With Existing CRM
+## Scope
+- Employee Management: profiles tied 1:1 to users, org structure, contracts, and documents.
+- KPI and Performance: templates, cycles, reports, and weighted score calculations.
+- Training and Development: sessions, participants, and results.
+- Recruitment: candidate pipeline tracking.
+- Onboarding: templates, employee onboarding, and task progress.
+- 360 Feedback: cycles, requests, answers, and aggregation inputs.
+- Engagement Surveys: surveys, questions, submissions, and answers.
 
-### Bounded Context Rules
+## Bounded Context Rules
 - HR is a separate bounded context.
 - HR models may reference `users.id` only.
 - CRM models do not reference HR tables.
@@ -12,7 +19,7 @@ This document describes the HR module implementation inside the existing Laravel
 - Some employees never log in, but they still exist as users.
 - No payroll or finance logic exists in HR.
 
-### How It Fits the Existing CRM Architecture
+## Architecture Fit With CRM
 - Uses the same Eloquent conventions: domain models under `app/Models/Hr` and `app/Models/Crm`, soft deletes where required, and enum casts for status fields.
 - Uses the same permission system: Spatie roles/permissions with centralized entity.action strings from `app/Support/Permissions.php`.
 - Uses the same policy pattern: per-model policies and Filament visibility tied to `canViewAny`, `canCreate`, `canUpdate`, `canDelete`.
@@ -20,8 +27,44 @@ This document describes the HR module implementation inside the existing Laravel
 - Uses the same audit log system: `AuditLogger` writes to the shared `audit_logs` table for status changes and deletions.
 - Uses the existing notification infrastructure (database notifications, optional mail).
 
-## 2) Folder Structure and Module Layout
+## Roles and Permissions (HR)
+Legend: full = view/create/update/delete/export, view+update = view + update, view = view only.
 
+| Capability | superadmin | hr_admin | hr_manager | department_manager |
+| --- | --- | --- | --- | --- |
+| Org Structure (departments, positions, branches, contract_types) | full | full | view | view |
+| Employees | full | full | full | view |
+| Employee Documents | full | full | full | view |
+| KPI Templates | full | full | view | view |
+| KPI Cycles | full | full | full | view |
+| KPI Reports | full | full | full | view+update |
+| Training Sessions | full | full | full | view |
+| Training Participants | full | full | full | view+update |
+| Candidates | full | full | full | view |
+| Onboarding Templates | full | full | view | view |
+| Employee Onboarding | full | full | full | view+update |
+| Feedback Cycles | full | full | view | view |
+| Feedback Requests | full | full | full | view+update |
+| Engagement Surveys | full | full | full | view |
+| Survey Submissions | full | full | full | view+update |
+
+Policy-level scoping restricts hr_manager and department_manager access to their department/team records. Superadmin bypasses all scope checks.
+
+## Status Transitions
+- Employee: active -> suspended|left; suspended -> active|left; left terminal
+- KPI Report: draft -> submitted -> manager_reviewed -> closed; closed terminal
+- KPI Cycle: open -> closed
+- Training Session: scheduled -> completed|cancelled; terminal after
+- Training Attendance: invited -> confirmed -> attended|no_show|cancelled
+- Training Result: pending -> passed|failed
+- Recruitment Stage: application -> interview -> offer -> hired
+- Onboarding: not_started -> in_progress -> completed; can cancel from not_started/in_progress
+- Onboarding Task: pending -> in_progress -> completed; pending/in_progress -> blocked; blocked -> in_progress
+- Feedback Cycle: draft -> open -> closed
+- Feedback Request: pending -> submitted; pending -> cancelled; submitted -> closed
+- Survey: draft -> open -> closed -> archived
+
+## Folder Structure and Module Layout
 - `app/Models/Hr/`
   - Core: `Employee`, `Department`, `Position`, `Branch`, `ContractType`, `EmployeeDocument`
   - KPI: `Kpi/` (template, items, cycle, report, report items)
@@ -63,11 +106,7 @@ This document describes the HR module implementation inside the existing Laravel
 - `database/migrations/`
   - HR migrations prefixed with `create_hr_` and timestamp ordered, covering all HR tables.
 
-- `docs/HR.md`
-  - HR module overview, permissions matrix, and UI notes.
-
-## 3) Data Model and Relationships
-
+## Data Model and Relationships
 ### Employee Management
 - `employees` belongsTo `users` (1-1) via `user_id`.
 - `employees` belongsTo `departments`, `positions`, `branches`, `contract_types`.
@@ -105,26 +144,7 @@ This document describes the HR module implementation inside the existing Laravel
 - `survey_submissions` belongsTo `engagement_surveys` and `users`.
 - `survey_answers` belongsTo `survey_submissions` and `survey_questions`.
 
-## 4) Status Transitions and Enforcement
-
-All status enums use `HasStatusTransitions`. Models with status fields use `EnforcesStatusTransitions` where possible.
-For non-standard field names (e.g., `stage`, `attendance_status`), transitions are validated in model `booted` hooks.
-
-- EmployeeStatus: active -> suspended|left; suspended -> active|left; left terminal
-- KpiReportStatus: draft -> submitted -> manager_reviewed -> closed
-- KpiCycleStatus: open -> closed
-- TrainingSessionStatus: scheduled -> completed|cancelled
-- TrainingAttendanceStatus: invited -> confirmed -> attended|no_show|cancelled
-- TrainingResultStatus: pending -> passed|failed
-- RecruitmentStage: application -> interview -> offer -> hired
-- OnboardingStatus: not_started -> in_progress -> completed; cancel from not_started/in_progress
-- OnboardingTaskStatus: pending -> in_progress -> completed; pending/in_progress -> blocked; blocked -> in_progress
-- FeedbackCycleStatus: draft -> open -> closed
-- FeedbackRequestStatus: pending -> submitted|cancelled; submitted -> closed
-- SurveyStatus: draft -> open -> closed -> archived
-
-## 5) Permissions and Role Behavior
-
+## Permissions and Role Behavior
 Permissions are generated per entity/action (`view`, `create`, `update`, `delete`, `export`).
 The HR roles are defined in the roles seeder and rely on policies for scope enforcement.
 
@@ -140,13 +160,12 @@ Scope is enforced in policies (not permissions):
 - The scope check derives the manager's employee record and compares department or `manager_user_id`.
 
 ### Traits Used
-- `app/Policies/Hr/Concerns/ScopesHrAccess.php` (new): shared HR policy scoping helpers.
-- `app/Models/Concerns/EnforcesStatusTransitions.php` (existing): enforces status transitions for HR status fields.
-- `app/Models/Concerns/AssignsCreator.php` (existing): sets `created_by` on engagement surveys.
-- `app/Observers/Concerns/LogsDeletion.php` (existing): standard deletion audit logging for HR observers.
+- `app/Policies/Hr/Concerns/ScopesHrAccess.php`: shared HR policy scoping helpers.
+- `app/Models/Concerns/EnforcesStatusTransitions.php`: enforces status transitions for HR status fields.
+- `app/Models/Concerns/AssignsCreator.php`: sets `created_by` on engagement surveys.
+- `app/Observers/Concerns/LogsDeletion.php`: standard deletion audit logging for HR observers.
 
-## 6) Audit Logging
-
+## Audit Logging
 Audit log entries are written to the shared `audit_logs` table using `AuditLogger`:
 - Status changes for Employee, Candidate, KPI Report, Training Session, Onboarding, Onboarding Task, Feedback Cycle,
   Feedback Request, Engagement Survey.
@@ -154,8 +173,7 @@ Audit log entries are written to the shared `audit_logs` table using `AuditLogge
 
 Audit logging requires an authenticated user, consistent with CRM behavior.
 
-## 7) Notifications and Scheduling
-
+## Notifications and Scheduling
 Notifications use the existing database notification table and Laravel Notifications:
 
 - Contract expiration reminders
@@ -174,8 +192,7 @@ Notifications use the existing database notification table and Laravel Notificat
 
 Scheduling is configured in `routes/console.php` and uses the existing scheduler runtime.
 
-## 8) HR Functionality Flow
-
+## HR Functionality Flow
 ### Employee Management
 - Create `users` first (via existing CRM user flow) then attach an `employees` record.
 - Contract expiration is tracked via `contract_end_date`, with reminders sent by the scheduled job.
@@ -209,14 +226,9 @@ Scheduling is configured in `routes/console.php` and uses the existing scheduler
 - Surveys define windows (opens/closes) and question sets.
 - Submissions and answers are linked to users; anonymity is a reporting concern (not storage).
 
-## 9) Filament UI Integration
-
+## Filament UI Integration
 The HR module appears under a single "HR" navigation group. Resources follow CRM UI patterns
 (forms, tables, relation managers) and are authorization-aware through policies.
-
-HR roles (hr_admin, hr_manager, department_manager) land on a dedicated HR dashboard with
-HR widgets and do not see the standard CRM dashboard. Superadmin keeps the standard CRM
-dashboard and can still access HR resources.
 
 HR roles (hr_admin, hr_manager, department_manager) land on a dedicated HR dashboard with
 HR widgets and do not see the standard CRM dashboard. Superadmin keeps the standard CRM
@@ -233,17 +245,7 @@ Order (navigationSort):
 - Feedback (Cycles, Requests)
 - Surveys (Engagement Surveys, Survey Submissions)
 
-## 10) Implementation Notes
-
+## Implementation Notes
 - Status transitions are enforced at the model layer, not only in UI.
 - Policy scoping is strict for hr_manager and department_manager roles.
 - CRM domain remains independent; there are no HR references in CRM models.
-- New HR migrations follow a strict order to satisfy FK dependencies.
-
-## 11) How To Operate
-
-- Migrate: `php artisan migrate`
-- Seed roles: `php artisan db:seed --class=RolesAndPermissionsSeeder`
-- Reset permission cache: `php artisan permission:cache-reset`
-- Scheduler: `php artisan schedule:work`
-- Verify role access by logging into Filament and checking navigation + actions.
