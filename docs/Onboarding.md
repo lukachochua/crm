@@ -16,7 +16,7 @@ understand the architecture, project structure, and day-to-day workflows.
 5) Run the app:
    - `php artisan serve`
    - `npm run dev`
-6) Visit the admin panel at `/admin`.
+6) Visit the admin panel at `/admin` (role-based redirect to `/admin/hr` or `/admin/crm`).
 
 Tip: `composer run dev` runs server, queue, logs, and Vite together.
 
@@ -33,14 +33,14 @@ These steps are enforced with status enums and transition rules. Most actions
 are audited and access-controlled by role permissions.
 
 ## Project Structure (Where Things Live)
-- `app/Models`: Eloquent models and relationships.
+- `app/Models/Crm` and `app/Models/Hr`: Domain models and relationships.
 - `app/Enums`: Status enums and transition rules.
 - `app/Models/Concerns`: Shared model behaviors (status transitions, created_by).
-- `app/Observers`: Audit logging and domain side effects.
-- `app/Policies`: Authorization policies per entity.
-- `app/Filament/Resources`: CRUD UI for each entity.
-- `app/Filament/Widgets`: Dashboard widgets and charts.
-- `app/Filament/Exports`: Export definitions for CSV/Excel.
+- `app/Observers/Crm` and `app/Observers/Hr`: Audit logging and domain side effects.
+- `app/Policies/Crm` and `app/Policies/Hr`: Authorization policies per entity.
+- `app/Filament/Resources/Crm` and `app/Filament/Resources/Hr`: CRUD UI for each entity.
+- `app/Filament/Widgets/Crm` and `app/Filament/Widgets/Hr`: Dashboard widgets and charts.
+- `app/Filament/Exports/Crm`: Export definitions for CSV/Excel.
 - `app/Providers/Filament/AdminPanelProvider.php`: Filament panel config.
 - `database/migrations`: Schema and turnover view.
 - `database/seeders`: Roles and permissions seeding.
@@ -104,7 +104,7 @@ When an Order status changes to `completed`, the system attempts to create a
 draft invoice for the remaining billable amount. If the order is already fully
 paid or fully invoiced, it skips and shows a warning.
 
-Logic lives in `app/Observers/OrderObserver.php`.
+Logic lives in `app/Observers/Crm/OrderObserver.php`.
 
 ### Turnover Overview (Read-Only View)
 `turnover_overviews` is a database view that aggregates monthly invoiced vs paid

@@ -17,6 +17,8 @@ class CrmDashboard extends Dashboard
 {
     protected static bool $isDiscovered = false;
 
+    protected static string $routePath = '/crm';
+
     public static function canAccess(): bool
     {
         $user = Auth::user();

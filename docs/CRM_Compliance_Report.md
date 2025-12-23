@@ -41,39 +41,39 @@ Compliant.
 
 ### Policies
 Compliant.
-- Policies for all entities: app/Policies/*Policy.php
+- Policies for all entities: app/Policies/Crm/*Policy.php
 - Registered in app/Providers/AuthServiceProvider.php
 
 ### Audit Logging
 Compliant.
-- Status changes: app/Observers/ApplicationObserver.php, app/Observers/OrderObserver.php, app/Observers/ReservationObserver.php, app/Observers/InvoiceObserver.php, app/Observers/PaymentObserver.php
-- Payments: app/Observers/PaymentObserver.php
+- Status changes: app/Observers/Crm/ApplicationObserver.php, app/Observers/Crm/OrderObserver.php, app/Observers/Crm/ReservationObserver.php, app/Observers/Crm/InvoiceObserver.php, app/Observers/Crm/PaymentObserver.php
+- Payments: app/Observers/Crm/PaymentObserver.php
 - Deletions: app/Observers/Concerns/LogsDeletion.php and observers
 - Audit storage: app/Models/AuditLog.php, app/Services/AuditLogger.php
 
 ### Filament Resources
 Compliant.
-- Resources: app/Filament/Resources/*Resource.php
-- Relation managers: app/Filament/Resources/CustomerResource/RelationManagers/OrdersRelationManager.php, app/Filament/Resources/OrderResource/RelationManagers/InvoicesRelationManager.php
+- Resources: app/Filament/Resources/Crm/*Resource.php
+- Relation managers: app/Filament/Resources/Crm/CustomerResource/RelationManagers/OrdersRelationManager.php, app/Filament/Resources/Crm/OrderResource/RelationManagers/InvoicesRelationManager.php
 - Navigation hidden when no access: shouldRegisterNavigation uses canViewAny
 - Read-only roles: create/edit/delete actions hidden via Gate checks
 
 ### Turnover Overview
 Compliant.
-- Read-only view and resource: database/migrations/2025_12_19_191200_create_turnover_overviews_view.php, app/Models/TurnoverOverview.php, app/Filament/Resources/TurnoverOverviewResource.php
+- Read-only view and resource: database/migrations/2025_12_19_191200_create_turnover_overviews_view.php, app/Models/Crm/TurnoverOverview.php, app/Filament/Resources/Crm/TurnoverOverviewResource.php
 
 ## Deviations / Additions
 
 ### Additional Export Support (Not in CRM.md)
 Added to support Filament export functionality.
-- Exporters: app/Filament/Exports/*.php
+- Exporters: app/Filament/Exports/Crm/*.php
 - Exports table migration: database/migrations/2025_12_19_191300_create_exports_table.php
 - Notifications table migration: database/migrations/2025_12_19_191305_create_notifications_table.php
 
 ### Vehicle Status Values
 CRM.md does not define a vehicle status enum. The UI uses specific values:
 - available, reserved, sold
-- Implemented in app/Filament/Resources/VehicleResource.php
+- Implemented in app/Filament/Resources/Crm/VehicleResource.php
 
 ## Behavioral Notes (Not Explicitly Specified)
 - Turnover view sums all invoices and payments that are not soft-deleted, without filtering by status. If turnover should exclude draft or cancelled invoices, or failed/reversed payments, this is a spec clarification needed.

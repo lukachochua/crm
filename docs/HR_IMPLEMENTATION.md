@@ -13,7 +13,7 @@ This document describes the HR module implementation inside the existing Laravel
 - No payroll or finance logic exists in HR.
 
 ### How It Fits the Existing CRM Architecture
-- Uses the same Eloquent conventions: model classes under `app/Models`, soft deletes where required, and enum casts for status fields.
+- Uses the same Eloquent conventions: domain models under `app/Models/Hr` and `app/Models/Crm`, soft deletes where required, and enum casts for status fields.
 - Uses the same permission system: Spatie roles/permissions with centralized entity.action strings from `app/Support/Permissions.php`.
 - Uses the same policy pattern: per-model policies and Filament visibility tied to `canViewAny`, `canCreate`, `canUpdate`, `canDelete`.
 - Uses the same status transition enforcement approach: enums + `HasStatusTransitions` + `EnforcesStatusTransitions` where a status field exists.
