@@ -2,7 +2,7 @@
 
 namespace App\Filament\Exports\Crm;
 
-use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Reporting\TurnoverOverview;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;

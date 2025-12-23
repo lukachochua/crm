@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Crm;
 
-use App\Enums\ReservationStatus;
+use App\Enums\Crm\ReservationStatus;
 use App\Filament\Exports\Crm\ReservationExporter;
 use App\Filament\Resources\Crm\ReservationResource\Pages;
-use App\Models\Crm\Reservation;
+use App\Models\Crm\Sales\Reservation;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;

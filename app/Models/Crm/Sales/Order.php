@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Crm\Sales;
 
-use App\Enums\OrderStatus;
+use App\Enums\Crm\OrderStatus;
 use App\Models\Concerns\AssignsCreator;
 use App\Models\Concerns\EnforcesStatusTransitions;
+use App\Models\Crm\Billing\Invoice;
+use App\Models\Crm\Parties\Customer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

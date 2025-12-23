@@ -2,7 +2,7 @@
 
 namespace App\Policies\Crm;
 
-use App\Models\Crm\Customer;
+use App\Models\Crm\Parties\Customer;
 use App\Models\User;
 use App\Support\Permissions;
 

@@ -2,8 +2,8 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\ApplicationStatus;
-use App\Models\Crm\Application;
+use App\Enums\Crm\ApplicationStatus;
+use App\Models\Crm\Sales\Application;
 use Filament\Widgets\ChartWidget;
 
 class ApplicationStatusChart extends ChartWidget

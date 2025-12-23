@@ -15,6 +15,23 @@ This document is the technical source of truth for CRM architecture, data model,
 ## Admin Panel Routing
 - `/admin` is a landing page that redirects by role to `/admin/crm` or `/admin/hr`.
 - CRM dashboards live under `app/Filament/Pages/Crm`.
+The landing logic lives in `app/Filament/Pages/AdminLanding.php`.
+
+## CRM Code Layout
+- `app/Models/Crm/Sales`: applications, orders, reservations.
+- `app/Models/Crm/Parties`: customers.
+- `app/Models/Crm/Assets`: vehicles.
+- `app/Models/Crm/Billing`: invoices, payments.
+- `app/Models/Crm/Reporting`: turnover overview view model.
+- `app/Observers/Crm`: audit logging and CRM side effects (auto-invoice).
+- `app/Policies/Crm`: authorization policies.
+- `app/Filament/Resources/Crm`: CRUD UI resources.
+- `app/Filament/Widgets/Crm`: CRM dashboard widgets.
+- `app/Filament/Exports/Crm`: export definitions.
+- `app/Filament/Pages/Crm`: CRM dashboards.
+- `app/Services/AuditLogger.php`: shared audit log writer.
+- `app/Providers/AppServiceProvider.php`: observer registration and audit log morph map.
+- `app/Providers/AuthServiceProvider.php`: policy registration.
 
 ## Role and Permission Matrix
 Legend:
@@ -223,6 +240,7 @@ Some audit events require an authenticated user. The auto-invoice path does not
 create audit entries on its own, but later invoice changes will be logged.
 Audit logs are not editable in the UI.
 Running actions in console without an authenticated user can throw exceptions.
+Audit logs use a polymorphic relation and are mapped in `app/Providers/AppServiceProvider.php` to preserve legacy class names.
 
 ### Current Assumptions and Defaults
 - Order `total_amount` is the pre-discount price.
@@ -249,4 +267,4 @@ Running actions in console without an authenticated user can throw exceptions.
 3) Run migrations: `php artisan migrate`.
 4) Seed roles and permissions: `php artisan db:seed`.
 5) Create a Filament admin user: `php artisan make:filament-user`.
-6) Access Filament at `/admin`.
+6) Access Filament at `/admin` (CRM users land at `/admin/crm`).

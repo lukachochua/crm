@@ -2,7 +2,7 @@
 
 namespace App\Policies\Crm;
 
-use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Reporting\TurnoverOverview;
 use App\Models\User;
 use App\Support\Permissions;
 

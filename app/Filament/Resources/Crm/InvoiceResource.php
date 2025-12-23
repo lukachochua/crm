@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Crm;
 
-use App\Enums\InvoiceStatus;
+use App\Enums\Crm\InvoiceStatus;
 use App\Filament\Exports\Crm\InvoiceExporter;
 use App\Filament\Resources\Crm\InvoiceResource\Pages;
-use App\Models\Crm\Invoice;
+use App\Models\Crm\Billing\Invoice;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;

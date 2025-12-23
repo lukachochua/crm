@@ -2,7 +2,7 @@
 
 namespace App\Filament\Exports\Crm;
 
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Assets\Vehicle;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;

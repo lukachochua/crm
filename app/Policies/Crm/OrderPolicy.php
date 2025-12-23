@@ -2,7 +2,7 @@
 
 namespace App\Policies\Crm;
 
-use App\Models\Crm\Order;
+use App\Models\Crm\Sales\Order;
 use App\Models\User;
 use App\Support\Permissions;
 

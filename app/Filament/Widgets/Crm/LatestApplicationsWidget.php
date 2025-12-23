@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\ApplicationStatus;
+use App\Enums\Crm\ApplicationStatus;
 use App\Filament\Resources\Crm\ApplicationResource;
-use App\Models\Crm\Application;
+use App\Models\Crm\Sales\Application;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;

@@ -2,8 +2,8 @@
 
 namespace App\Filament\Exports\Crm;
 
-use App\Enums\ReservationStatus;
-use App\Models\Crm\Reservation;
+use App\Enums\Crm\ReservationStatus;
+use App\Models\Crm\Sales\Reservation;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;

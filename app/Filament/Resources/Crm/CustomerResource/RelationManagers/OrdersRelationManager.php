@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Crm\CustomerResource\RelationManagers;
 
-use App\Enums\OrderStatus;
-use App\Models\Crm\Order;
+use App\Enums\Crm\OrderStatus;
+use App\Models\Crm\Sales\Order;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

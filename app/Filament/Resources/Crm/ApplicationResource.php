@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Crm;
 
-use App\Enums\ApplicationStatus;
+use App\Enums\Crm\ApplicationStatus;
 use App\Filament\Exports\Crm\ApplicationExporter;
 use App\Filament\Resources\Crm\ApplicationResource\Pages;
-use App\Models\Crm\Application;
-use App\Models\Crm\Customer;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Parties\Customer;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;

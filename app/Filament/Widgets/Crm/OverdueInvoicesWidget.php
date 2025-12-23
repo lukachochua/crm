@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\InvoiceStatus;
+use App\Enums\Crm\InvoiceStatus;
 use App\Filament\Resources\Crm\InvoiceResource;
-use App\Models\Crm\Invoice;
+use App\Models\Crm\Billing\Invoice;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;

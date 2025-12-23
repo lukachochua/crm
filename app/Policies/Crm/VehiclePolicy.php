@@ -3,7 +3,7 @@
 namespace App\Policies\Crm;
 
 use App\Models\User;
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Assets\Vehicle;
 use App\Support\Permissions;
 
 class VehiclePolicy

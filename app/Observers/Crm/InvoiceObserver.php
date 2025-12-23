@@ -3,8 +3,8 @@
 namespace App\Observers\Crm;
 
 use App\Enums\AuditActionType;
-use App\Enums\InvoiceStatus;
-use App\Models\Crm\Invoice;
+use App\Enums\Crm\InvoiceStatus;
+use App\Models\Crm\Billing\Invoice;
 use App\Observers\Concerns\LogsDeletion;
 use App\Services\AuditLogger;
 

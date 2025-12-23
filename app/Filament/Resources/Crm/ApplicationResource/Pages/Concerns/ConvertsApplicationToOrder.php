@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Crm\ApplicationResource\Pages\Concerns;
 
-use App\Enums\ApplicationStatus;
-use App\Enums\OrderStatus;
+use App\Enums\Crm\ApplicationStatus;
+use App\Enums\Crm\OrderStatus;
 use App\Filament\Resources\Crm\OrderResource;
-use App\Models\Crm\Application;
-use App\Models\Crm\Order;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Sales\Order;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

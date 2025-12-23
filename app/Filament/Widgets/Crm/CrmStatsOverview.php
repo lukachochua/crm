@@ -2,22 +2,22 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\ApplicationStatus;
-use App\Enums\InvoiceStatus;
-use App\Enums\OrderStatus;
-use App\Enums\PaymentStatus;
+use App\Enums\Crm\ApplicationStatus;
+use App\Enums\Crm\InvoiceStatus;
+use App\Enums\Crm\OrderStatus;
+use App\Enums\Crm\PaymentStatus;
 use App\Filament\Resources\Crm\ApplicationResource;
 use App\Filament\Resources\Crm\CustomerResource;
 use App\Filament\Resources\Crm\InvoiceResource;
 use App\Filament\Resources\Crm\OrderResource;
 use App\Filament\Resources\Crm\TurnoverOverviewResource;
 use App\Filament\Resources\Crm\VehicleResource;
-use App\Models\Crm\Application;
-use App\Models\Crm\Customer;
-use App\Models\Crm\Invoice;
-use App\Models\Crm\Order;
-use App\Models\Crm\Payment;
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Parties\Customer;
+use App\Models\Crm\Billing\Invoice;
+use App\Models\Crm\Sales\Order;
+use App\Models\Crm\Billing\Payment;
+use App\Models\Crm\Assets\Vehicle;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

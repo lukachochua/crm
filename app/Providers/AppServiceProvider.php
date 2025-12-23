@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Crm\Application;
-use App\Models\Crm\Customer;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Parties\Customer;
 use App\Models\Hr\Employee;
 use App\Models\Hr\EmployeeDocument;
 use App\Models\Hr\Feedback\FeedbackCycle;
@@ -24,12 +24,12 @@ use App\Models\Hr\Survey\EngagementSurvey;
 use App\Models\Hr\Survey\SurveySubmission;
 use App\Models\Hr\Training\TrainingSession;
 use App\Models\Hr\Training\TrainingParticipant;
-use App\Models\Crm\Invoice;
-use App\Models\Crm\Order;
-use App\Models\Crm\Payment;
-use App\Models\Crm\Reservation;
-use App\Models\Crm\TurnoverOverview;
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Billing\Invoice;
+use App\Models\Crm\Sales\Order;
+use App\Models\Crm\Billing\Payment;
+use App\Models\Crm\Sales\Reservation;
+use App\Models\Crm\Reporting\TurnoverOverview;
+use App\Models\Crm\Assets\Vehicle;
 use App\Observers\Crm\ApplicationObserver;
 use App\Observers\Crm\CustomerObserver;
 use App\Observers\Hr\BranchObserver;

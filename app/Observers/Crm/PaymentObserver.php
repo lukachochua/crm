@@ -3,8 +3,8 @@
 namespace App\Observers\Crm;
 
 use App\Enums\AuditActionType;
-use App\Enums\PaymentStatus;
-use App\Models\Crm\Payment;
+use App\Enums\Crm\PaymentStatus;
+use App\Models\Crm\Billing\Payment;
 use App\Observers\Concerns\LogsDeletion;
 use App\Services\AuditLogger;
 

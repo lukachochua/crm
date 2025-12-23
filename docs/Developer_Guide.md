@@ -20,14 +20,17 @@ This guide covers local setup, project structure, runtime behavior, and how to a
 Tip: `composer run dev` runs server, queue, logs, and Vite together.
 
 ## Project Structure Summary
-- `app/Models/Crm` and `app/Models/Hr`: domain models and relationships.
-- `app/Enums` and `app/Enums/Hr`: status enums and transition rules.
+- `app/Models/Crm/*` and `app/Models/Hr/*`: domain models and relationships grouped by subdomain.
+- `app/Enums` (shared concerns) plus `app/Enums/Crm` and `app/Enums/Hr`: status enums and transition rules.
 - `app/Models/Concerns`: shared model behaviors (status transitions, created_by).
 - `app/Observers/Crm` and `app/Observers/Hr`: audit logging and domain side effects.
 - `app/Policies/Crm` and `app/Policies/Hr`: authorization policies per entity.
+- `app/Services/Crm` and `app/Services/Hr`: domain services and report helpers.
+- `app/Jobs/Crm` and `app/Jobs/Hr`: background jobs per domain.
+- `app/Notifications/Crm` and `app/Notifications/Hr`: domain notifications.
 - `app/Filament/Resources/Crm` and `app/Filament/Resources/Hr`: CRUD UI for each entity.
 - `app/Filament/Widgets/Crm` and `app/Filament/Widgets/Hr`: dashboard widgets and charts.
-- `app/Filament/Exports/Crm`: export definitions for CSV/Excel.
+- `app/Filament/Exports/Crm` and `app/Filament/Exports/Hr`: export definitions for CSV/Excel.
 - `app/Filament/Pages/AdminLanding.php`: role-based redirect at `/admin`.
 - `app/Providers/Filament/AdminPanelProvider.php`: Filament panel configuration.
 - `database/migrations`: schema and turnover view.
@@ -150,17 +153,17 @@ app/Filament/Resources/Hr/EmployeeResource/RelationManagers/EmployeeDocumentsRel
 app/Filament/Resources/Hr/EmployeeResource/RelationManagers/KpiReportsRelationManager.php
 app/Models/Hr/Department.php
 app/Filament/Resources/Crm/TurnoverOverviewResource.php
-app/Models/Crm/Customer.php
-app/Models/Crm/Order.php
-app/Models/Crm/Reservation.php
-app/Models/Crm/Payment.php
-app/Models/Crm/TurnoverOverview.php
-app/Models/Crm/Invoice.php
+app/Models/Crm/Parties/Customer.php
+app/Models/Crm/Sales/Order.php
+app/Models/Crm/Sales/Reservation.php
+app/Models/Crm/Billing/Payment.php
+app/Models/Crm/Reporting/TurnoverOverview.php
+app/Models/Crm/Billing/Invoice.php
 app/Filament/Resources/Crm/CustomerResource/RelationManagers/OrdersRelationManager.php
 app/Filament/Resources/Hr/TrainingSessionResource.php
-app/Models/Crm/Vehicle.php
+app/Models/Crm/Assets/Vehicle.php
 app/Filament/Resources/Hr/DepartmentResource.php
-app/Models/Crm/Application.php
+app/Models/Crm/Sales/Application.php
 app/Models/AuditLog.php
 app/Filament/Resources/Hr/SurveySubmissionResource/Pages/ViewSurveySubmission.php
 app/Filament/Resources/Hr/SurveySubmissionResource/Pages/EditSurveySubmission.php
@@ -294,14 +297,14 @@ app/Policies/Crm/ApplicationPolicy.php
 app/Policies/Crm/VehiclePolicy.php
 app/Policies/Crm/TurnoverOverviewPolicy.php
 app/Enums/AuditActionType.php
-app/Enums/OrderStatus.php
+app/Enums/Crm/OrderStatus.php
 app/Filament/Resources/Hr/KpiReportResource/RelationManagers/KpiReportItemsRelationManager.php
 app/Enums/Concerns/HasStatusTransitions.php
 app/Providers/AppServiceProvider.php
-app/Enums/ReservationStatus.php
-app/Enums/PaymentStatus.php
-app/Enums/ApplicationStatus.php
-app/Enums/InvoiceStatus.php
+app/Enums/Crm/ReservationStatus.php
+app/Enums/Crm/PaymentStatus.php
+app/Enums/Crm/ApplicationStatus.php
+app/Enums/Crm/InvoiceStatus.php
 app/Filament/Widgets/Crm/RecentOrdersWidget.php
 app/Filament/Widgets/Crm/LatestApplicationsWidget.php
 app/Filament/Widgets/Crm/OverdueInvoicesWidget.php
@@ -558,7 +561,7 @@ Use this template to add a new domain module while keeping boundaries clean.
 2) Add enums for status transitions and apply `EnforcesStatusTransitions` where needed.
 3) Add policies and wire them in `app/Providers/AuthServiceProvider.php`.
 4) Add observers for auditing and wire them in `app/Providers/AppServiceProvider.php`.
-5) Add Filament resources/pages/widgets for UI and register any dashboards.
+5) Add Filament resources/pages/widgets/exports for UI and register any dashboards.
 6) Add permissions in `app/Support/Permissions.php` and role grants in `database/seeders/RolesAndPermissionsSeeder.php`.
 7) Update `app/Filament/Pages/AdminLanding.php` if the new module needs its own landing dashboard.
 8) Add docs in `docs/` describing the module and workflows.
@@ -566,13 +569,19 @@ Use this template to add a new domain module while keeping boundaries clean.
 ### File/Folder Scaffold
 ```
 app/Models/NewDomain/
+app/Models/NewDomain/Core/
+app/Models/NewDomain/Reporting/
 app/Enums/NewDomain/
 app/Policies/NewDomain/
+app/Policies/NewDomain/Concerns/
 app/Observers/NewDomain/
 app/Services/NewDomain/
+app/Jobs/NewDomain/
+app/Notifications/NewDomain/
 app/Filament/Resources/NewDomain/
 app/Filament/Pages/NewDomain/
 app/Filament/Widgets/NewDomain/
+app/Filament/Exports/NewDomain/
 
 database/migrations/*_create_new_domain_*_table.php
 
@@ -642,3 +651,5 @@ critical business logic, add targeted unit or feature tests.
 - `docs/CRM_Compliance_Report.md`
 - `docs/CRM_Screenshot_Walkthrough.md`
 - `docs/HR_Module.md`
+- `docs/HR_Technical_Reference.md`
+- `docs/PROJECT_Technical_Reference.md`

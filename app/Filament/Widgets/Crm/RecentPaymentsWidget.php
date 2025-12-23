@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\PaymentStatus;
+use App\Enums\Crm\PaymentStatus;
 use App\Filament\Resources\Crm\PaymentResource;
-use App\Models\Crm\Payment;
+use App\Models\Crm\Billing\Payment;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;

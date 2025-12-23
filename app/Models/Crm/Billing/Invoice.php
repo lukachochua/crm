@@ -1,31 +1,35 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Crm\Billing;
 
-use App\Enums\ReservationStatus;
+use App\Enums\Crm\InvoiceStatus;
 use App\Models\Concerns\EnforcesStatusTransitions;
+use App\Models\Crm\Sales\Order;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Reservation extends Model
+class Invoice extends Model
 {
     use EnforcesStatusTransitions;
     use SoftDeletes;
 
     protected $fillable = [
         'order_id',
-        'vehicle_id',
+        'invoice_number',
         'status',
-        'reserved_from',
-        'reserved_until',
+        'total_amount',
+        'issued_at',
+        'due_date',
         'notes',
     ];
 
     protected $casts = [
-        'status' => ReservationStatus::class,
-        'reserved_from' => 'datetime',
-        'reserved_until' => 'datetime',
+        'status' => InvoiceStatus::class,
+        'total_amount' => 'decimal:2',
+        'issued_at' => 'datetime',
+        'due_date' => 'datetime',
     ];
 
     public function order(): BelongsTo
@@ -33,13 +37,13 @@ class Reservation extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function vehicle(): BelongsTo
+    public function payments(): HasMany
     {
-        return $this->belongsTo(Vehicle::class);
+        return $this->hasMany(Payment::class);
     }
 
     protected static function statusEnumClass(): string
     {
-        return ReservationStatus::class;
+        return InvoiceStatus::class;
     }
 }

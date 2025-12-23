@@ -1,41 +1,46 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Crm\Sales;
 
-use App\Enums\PaymentStatus;
+use App\Enums\Crm\ApplicationStatus;
 use App\Models\Concerns\AssignsCreator;
 use App\Models\Concerns\EnforcesStatusTransitions;
+use App\Models\Crm\Parties\Customer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Payment extends Model
+class Application extends Model
 {
     use AssignsCreator;
     use EnforcesStatusTransitions;
     use SoftDeletes;
 
     protected $fillable = [
-        'invoice_id',
-        'amount',
+        'customer_id',
         'status',
-        'payment_date',
+        'requested_at',
         'created_by',
-        'payment_method',
-        'reference_number',
-        'notes',
+        'description',
+        'source',
+        'internal_notes',
     ];
 
     protected $casts = [
-        'status' => PaymentStatus::class,
-        'amount' => 'decimal:2',
-        'payment_date' => 'datetime',
+        'status' => ApplicationStatus::class,
+        'requested_at' => 'datetime',
     ];
 
-    public function invoice(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class);
     }
 
     public function creator(): BelongsTo
@@ -45,6 +50,6 @@ class Payment extends Model
 
     protected static function statusEnumClass(): string
     {
-        return PaymentStatus::class;
+        return ApplicationStatus::class;
     }
 }

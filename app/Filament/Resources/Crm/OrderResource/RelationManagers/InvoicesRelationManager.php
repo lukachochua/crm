@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Crm\OrderResource\RelationManagers;
 
-use App\Enums\InvoiceStatus;
-use App\Models\Crm\Invoice;
+use App\Enums\Crm\InvoiceStatus;
+use App\Models\Crm\Billing\Invoice;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

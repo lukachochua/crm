@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\ReservationStatus;
+use App\Enums\Crm\ReservationStatus;
 use App\Filament\Resources\Crm\ReservationResource;
-use App\Models\Crm\Reservation;
+use App\Models\Crm\Sales\Reservation;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;

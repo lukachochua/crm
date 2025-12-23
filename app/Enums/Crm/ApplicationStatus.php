@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\Crm;
 
 use App\Enums\Concerns\HasStatusTransitions;
 

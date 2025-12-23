@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Crm\Parties;
 
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Sales\Order;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

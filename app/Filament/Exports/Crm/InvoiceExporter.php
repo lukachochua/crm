@@ -2,8 +2,8 @@
 
 namespace App\Filament\Exports\Crm;
 
-use App\Enums\InvoiceStatus;
-use App\Models\Crm\Invoice;
+use App\Enums\Crm\InvoiceStatus;
+use App\Models\Crm\Billing\Invoice;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;

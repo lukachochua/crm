@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Crm;
 
 use App\Filament\Exports\Crm\VehicleExporter;
 use App\Filament\Resources\Crm\VehicleResource\Pages;
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Assets\Vehicle;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

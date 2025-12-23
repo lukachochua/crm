@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Enums\OrderStatus;
+use App\Enums\Crm\OrderStatus;
 use App\Filament\Resources\Crm\OrderResource;
-use App\Models\Crm\Order;
+use App\Models\Crm\Sales\Order;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget;

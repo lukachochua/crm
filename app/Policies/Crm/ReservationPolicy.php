@@ -2,7 +2,7 @@
 
 namespace App\Policies\Crm;
 
-use App\Models\Crm\Reservation;
+use App\Models\Crm\Sales\Reservation;
 use App\Models\User;
 use App\Support\Permissions;
 

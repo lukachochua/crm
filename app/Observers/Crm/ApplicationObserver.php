@@ -3,7 +3,7 @@
 namespace App\Observers\Crm;
 
 use App\Enums\AuditActionType;
-use App\Models\Crm\Application;
+use App\Models\Crm\Sales\Application;
 use App\Observers\Concerns\LogsDeletion;
 use App\Services\AuditLogger;
 

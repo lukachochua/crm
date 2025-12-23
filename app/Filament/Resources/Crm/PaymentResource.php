@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Crm;
 
-use App\Enums\PaymentStatus;
+use App\Enums\Crm\PaymentStatus;
 use App\Filament\Exports\Crm\PaymentExporter;
 use App\Filament\Resources\Crm\PaymentResource\Pages;
-use App\Models\Crm\Payment;
+use App\Models\Crm\Billing\Payment;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;

@@ -2,7 +2,7 @@
 
 namespace App\Policies\Crm;
 
-use App\Models\Crm\Invoice;
+use App\Models\Crm\Billing\Invoice;
 use App\Models\User;
 use App\Support\Permissions;
 

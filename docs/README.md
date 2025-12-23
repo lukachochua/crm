@@ -6,6 +6,8 @@
 
 ## Technical Reference
 - `docs/CRM_Technical_Reference.md`: Architecture, data model, runtime flows, and invoicing behavior.
+- `docs/HR_Technical_Reference.md`: HR architecture, data model, permissions, and runtime behavior.
+- `docs/PROJECT_Technical_Reference.md`: Full project reference mapped to the requirements list.
 - `docs/CRM_Compliance_Report.md`: Compliance matrix against the CRM specification.
 
 ## Developer Enablement

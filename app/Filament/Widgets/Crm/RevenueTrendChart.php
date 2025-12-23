@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets\Crm;
 
-use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Reporting\TurnoverOverview;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Throwable;

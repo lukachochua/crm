@@ -8,7 +8,6 @@ use App\Models\Hr\Survey\SurveySubmission;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -17,13 +16,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Gate;
 
-class SurveySubmissionResource extends Resource
+class SurveySubmissionResource extends HrResource
 {
     protected static ?string $model = SurveySubmission::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
 
-    protected static ?string $navigationGroup = 'HR';
+    protected static ?string $hrNavigationGroup = 'Surveys';
 
     protected static ?int $navigationSort = 91;
 

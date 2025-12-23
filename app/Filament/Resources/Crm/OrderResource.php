@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Crm;
 
-use App\Enums\OrderStatus;
+use App\Enums\Crm\OrderStatus;
 use App\Filament\Exports\Crm\OrderExporter;
 use App\Filament\Resources\Crm\OrderResource\Pages;
 use App\Filament\Resources\Crm\OrderResource\RelationManagers\InvoicesRelationManager;
-use App\Models\Crm\Application;
-use App\Models\Crm\Customer;
-use App\Models\Crm\Order;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Parties\Customer;
+use App\Models\Crm\Sales\Order;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;

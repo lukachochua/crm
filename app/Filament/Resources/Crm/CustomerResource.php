@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Crm;
 use App\Filament\Exports\Crm\CustomerExporter;
 use App\Filament\Resources\Crm\CustomerResource\Pages;
 use App\Filament\Resources\Crm\CustomerResource\RelationManagers\OrdersRelationManager;
-use App\Models\Crm\Customer;
+use App\Models\Crm\Parties\Customer;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

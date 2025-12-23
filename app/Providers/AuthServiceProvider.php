@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Crm\Application;
-use App\Models\Crm\Customer;
+use App\Models\Crm\Sales\Application;
+use App\Models\Crm\Parties\Customer;
 use App\Models\Hr\Branch;
 use App\Models\Hr\ContractType;
 use App\Models\Hr\Department;
@@ -30,12 +30,12 @@ use App\Models\Hr\Survey\SurveyQuestion;
 use App\Models\Hr\Survey\SurveySubmission;
 use App\Models\Hr\Training\TrainingParticipant;
 use App\Models\Hr\Training\TrainingSession;
-use App\Models\Crm\Invoice;
-use App\Models\Crm\Order;
-use App\Models\Crm\Payment;
-use App\Models\Crm\Reservation;
-use App\Models\Crm\TurnoverOverview;
-use App\Models\Crm\Vehicle;
+use App\Models\Crm\Billing\Invoice;
+use App\Models\Crm\Sales\Order;
+use App\Models\Crm\Billing\Payment;
+use App\Models\Crm\Sales\Reservation;
+use App\Models\Crm\Reporting\TurnoverOverview;
+use App\Models\Crm\Assets\Vehicle;
 use App\Policies\Crm\ApplicationPolicy;
 use App\Policies\Hr\BranchPolicy;
 use App\Policies\Hr\CandidatePolicy;

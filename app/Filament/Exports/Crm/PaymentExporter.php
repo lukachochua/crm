@@ -2,8 +2,8 @@
 
 namespace App\Filament\Exports\Crm;
 
-use App\Enums\PaymentStatus;
-use App\Models\Crm\Payment;
+use App\Enums\Crm\PaymentStatus;
+use App\Models\Crm\Billing\Payment;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Crm\Assets;
 
+use App\Models\Crm\Sales\Reservation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Crm;
 
 use App\Filament\Exports\Crm\TurnoverOverviewExporter;
 use App\Filament\Resources\Crm\TurnoverOverviewResource\Pages;
-use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Reporting\TurnoverOverview;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
