@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Application;
-use App\Models\Customer;
+use App\Models\Crm\Application;
+use App\Models\Crm\Customer;
 use App\Models\Hr\Branch;
 use App\Models\Hr\ContractType;
 use App\Models\Hr\Department;
@@ -30,13 +30,13 @@ use App\Models\Hr\Survey\SurveyQuestion;
 use App\Models\Hr\Survey\SurveySubmission;
 use App\Models\Hr\Training\TrainingParticipant;
 use App\Models\Hr\Training\TrainingSession;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\Reservation;
-use App\Models\TurnoverOverview;
-use App\Models\Vehicle;
-use App\Policies\ApplicationPolicy;
+use App\Models\Crm\Invoice;
+use App\Models\Crm\Order;
+use App\Models\Crm\Payment;
+use App\Models\Crm\Reservation;
+use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Vehicle;
+use App\Policies\Crm\ApplicationPolicy;
 use App\Policies\Hr\BranchPolicy;
 use App\Policies\Hr\CandidatePolicy;
 use App\Policies\Hr\ContractTypePolicy;
@@ -63,13 +63,13 @@ use App\Policies\Hr\SurveyQuestionPolicy;
 use App\Policies\Hr\SurveySubmissionPolicy;
 use App\Policies\Hr\TrainingParticipantPolicy;
 use App\Policies\Hr\TrainingSessionPolicy;
-use App\Policies\CustomerPolicy;
-use App\Policies\InvoicePolicy;
-use App\Policies\OrderPolicy;
-use App\Policies\PaymentPolicy;
-use App\Policies\ReservationPolicy;
-use App\Policies\TurnoverOverviewPolicy;
-use App\Policies\VehiclePolicy;
+use App\Policies\Crm\CustomerPolicy;
+use App\Policies\Crm\InvoicePolicy;
+use App\Policies\Crm\OrderPolicy;
+use App\Policies\Crm\PaymentPolicy;
+use App\Policies\Crm\ReservationPolicy;
+use App\Policies\Crm\TurnoverOverviewPolicy;
+use App\Policies\Crm\VehiclePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

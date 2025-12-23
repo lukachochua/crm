@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Policies\Crm;
+
+use App\Models\Crm\Reservation;
+use App\Models\User;
+use App\Support\Permissions;
+
+class ReservationPolicy
+{
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'view'));
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Reservation $reservation): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'view'));
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'create'));
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Reservation $reservation): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'update'));
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Reservation $reservation): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'delete'));
+    }
+
+    public function export(User $user): bool
+    {
+        return $user->can(Permissions::permission('reservations', 'export'));
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Reservation $reservation): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, Reservation $reservation): bool
+    {
+        return false;
+    }
+}

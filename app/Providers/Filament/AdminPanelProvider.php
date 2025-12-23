@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\CrmDashboard;
+use App\Filament\Pages\Crm\CrmDashboard;
 use App\Filament\Pages\Hr\HrDashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;

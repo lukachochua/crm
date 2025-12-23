@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Application;
-use App\Models\Customer;
+use App\Models\Crm\Application;
+use App\Models\Crm\Customer;
 use App\Models\Hr\Employee;
 use App\Models\Hr\EmployeeDocument;
 use App\Models\Hr\Feedback\FeedbackCycle;
@@ -24,13 +24,14 @@ use App\Models\Hr\Survey\EngagementSurvey;
 use App\Models\Hr\Survey\SurveySubmission;
 use App\Models\Hr\Training\TrainingSession;
 use App\Models\Hr\Training\TrainingParticipant;
-use App\Models\Invoice;
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\Reservation;
-use App\Models\Vehicle;
-use App\Observers\ApplicationObserver;
-use App\Observers\CustomerObserver;
+use App\Models\Crm\Invoice;
+use App\Models\Crm\Order;
+use App\Models\Crm\Payment;
+use App\Models\Crm\Reservation;
+use App\Models\Crm\TurnoverOverview;
+use App\Models\Crm\Vehicle;
+use App\Observers\Crm\ApplicationObserver;
+use App\Observers\Crm\CustomerObserver;
 use App\Observers\Hr\BranchObserver;
 use App\Observers\Hr\CandidateObserver;
 use App\Observers\Hr\ContractTypeObserver;
@@ -51,11 +52,12 @@ use App\Observers\Hr\PositionObserver;
 use App\Observers\Hr\SurveySubmissionObserver;
 use App\Observers\Hr\TrainingParticipantObserver;
 use App\Observers\Hr\TrainingSessionObserver;
-use App\Observers\InvoiceObserver;
-use App\Observers\OrderObserver;
-use App\Observers\PaymentObserver;
-use App\Observers\ReservationObserver;
-use App\Observers\VehicleObserver;
+use App\Observers\Crm\InvoiceObserver;
+use App\Observers\Crm\OrderObserver;
+use App\Observers\Crm\PaymentObserver;
+use App\Observers\Crm\ReservationObserver;
+use App\Observers\Crm\VehicleObserver;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -77,6 +79,17 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('local') && ! $this->app->runningInConsole()) {
             URL::forceRootUrl(request()->getSchemeAndHttpHost());
         }
+
+        Relation::morphMap([
+            'App\\Models\\Application' => Application::class,
+            'App\\Models\\Customer' => Customer::class,
+            'App\\Models\\Order' => Order::class,
+            'App\\Models\\Reservation' => Reservation::class,
+            'App\\Models\\Invoice' => Invoice::class,
+            'App\\Models\\Payment' => Payment::class,
+            'App\\Models\\Vehicle' => Vehicle::class,
+            'App\\Models\\TurnoverOverview' => TurnoverOverview::class,
+        ]);
 
         Application::observe(ApplicationObserver::class);
         Order::observe(OrderObserver::class);
