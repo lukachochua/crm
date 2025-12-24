@@ -65,6 +65,21 @@ Statuses and meaning:
 - reversed: refunded or chargeback.
 - failed: did not settle.
 
+### Customer Contract (commercial metadata)
+Tracks contract numbers, types, dates, and status per customer. No billing logic or execution lives here.
+
+### Customer Pricing Profile (commercial metadata)
+Stores pricing type, discount, and currency metadata per customer. No calculations are enforced by the CRM.
+
+### Unified Document Registry (read-only)
+Provides a single list of CRM documents (applications, orders, reservations, invoices, payments). Clicking a row opens the original record.
+
+### Internal Transfer (document-only)
+Records intent to move items between locations. This is a CRM record only and does not affect inventory or finance.
+
+### Customer Return (document-only)
+Records a customer return notice with optional item descriptions. This is a CRM record only and does not affect inventory or finance.
+
 ## Roles and Responsibilities (Business View)
 
 ### Sales

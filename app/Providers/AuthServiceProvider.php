@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Crm\Sales\Application;
 use App\Models\Crm\Parties\Customer;
+use App\Models\Crm\Parties\CustomerContract;
+use App\Models\Crm\Parties\CustomerPricingProfile;
 use App\Models\Hr\Branch;
 use App\Models\Hr\ContractType;
 use App\Models\Hr\Department;
@@ -36,7 +38,12 @@ use App\Models\Crm\Billing\Payment;
 use App\Models\Crm\Sales\Reservation;
 use App\Models\Crm\Reporting\TurnoverOverview;
 use App\Models\Crm\Assets\Vehicle;
+use App\Models\Crm\Operations\CustomerReturn;
+use App\Models\Crm\Operations\InternalTransfer;
+use App\Models\Crm\Reporting\CrmDocumentRegistry;
 use App\Policies\Crm\ApplicationPolicy;
+use App\Policies\Crm\CrmDocumentRegistryPolicy;
+use App\Policies\Crm\CustomerContractPolicy;
 use App\Policies\Hr\BranchPolicy;
 use App\Policies\Hr\CandidatePolicy;
 use App\Policies\Hr\ContractTypePolicy;
@@ -64,7 +71,10 @@ use App\Policies\Hr\SurveySubmissionPolicy;
 use App\Policies\Hr\TrainingParticipantPolicy;
 use App\Policies\Hr\TrainingSessionPolicy;
 use App\Policies\Crm\CustomerPolicy;
+use App\Policies\Crm\CustomerPricingProfilePolicy;
+use App\Policies\Crm\CustomerReturnPolicy;
 use App\Policies\Crm\InvoicePolicy;
+use App\Policies\Crm\InternalTransferPolicy;
 use App\Policies\Crm\OrderPolicy;
 use App\Policies\Crm\PaymentPolicy;
 use App\Policies\Crm\ReservationPolicy;
@@ -84,10 +94,15 @@ class AuthServiceProvider extends ServiceProvider
         Order::class => OrderPolicy::class,
         Reservation::class => ReservationPolicy::class,
         Customer::class => CustomerPolicy::class,
+        CustomerContract::class => CustomerContractPolicy::class,
+        CustomerPricingProfile::class => CustomerPricingProfilePolicy::class,
         Vehicle::class => VehiclePolicy::class,
         Invoice::class => InvoicePolicy::class,
         Payment::class => PaymentPolicy::class,
         TurnoverOverview::class => TurnoverOverviewPolicy::class,
+        CrmDocumentRegistry::class => CrmDocumentRegistryPolicy::class,
+        InternalTransfer::class => InternalTransferPolicy::class,
+        CustomerReturn::class => CustomerReturnPolicy::class,
         Department::class => DepartmentPolicy::class,
         Position::class => PositionPolicy::class,
         Branch::class => BranchPolicy::class,

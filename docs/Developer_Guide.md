@@ -39,6 +39,13 @@ Tip: `composer run dev` runs server, queue, logs, and Vite together.
 
 See `docs/CRM_Technical_Reference.md` for runtime behavior and `docs/HR_Module.md` for HR details.
 
+## CRM Evolution (Phases 1-3)
+- Phase 1: Customer contracts and pricing metadata (no billing logic).
+- Phase 2: Unified document registry (read-only list of CRM documents).
+- Phase 3: Internal transfers and customer returns as document-only CRM records.
+
+No inventory or finance side effects exist in these phases. Phase 4 is expected to introduce warehouse or stock movement logic later.
+
 ## Full Project Inventory
 
 ### Top-Level Layout

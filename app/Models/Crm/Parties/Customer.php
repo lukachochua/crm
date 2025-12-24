@@ -31,4 +31,14 @@ class Customer extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(CustomerContract::class);
+    }
+
+    public function pricingProfiles(): HasMany
+    {
+        return $this->hasMany(CustomerPricingProfile::class);
+    }
 }

@@ -22,17 +22,25 @@ class RolesAndPermissionsSeeder extends Seeder
                 $this->fullAccess('orders'),
                 $this->fullAccess('reservations'),
                 $this->fullAccess('customers'),
+                $this->viewAccess('customer_contracts'),
+                $this->viewAccess('customer_pricing_profiles'),
                 $this->fullAccess('vehicles'),
-                $this->viewAccess('invoices')
+                $this->viewAccess('invoices'),
+                $this->viewCreateAccess('internal_transfers'),
+                $this->viewCreateAccess('customer_returns')
             ),
             'Back Office' => array_merge(
                 $this->viewAccess('applications'),
                 $this->fullAccess('orders'),
                 $this->fullAccess('reservations'),
                 $this->fullAccess('customers'),
+                $this->fullAccess('customer_contracts'),
+                $this->fullAccess('customer_pricing_profiles'),
                 $this->fullAccess('vehicles'),
                 $this->fullAccess('invoices'),
-                $this->viewAccess('payments')
+                $this->viewAccess('payments'),
+                $this->fullAccess('internal_transfers'),
+                $this->fullAccess('customer_returns')
             ),
             'Finance' => array_merge(
                 $this->viewAccess('orders'),
@@ -132,6 +140,14 @@ class RolesAndPermissionsSeeder extends Seeder
         return [
             Permissions::permission($entity, 'view'),
             Permissions::permission($entity, 'update'),
+        ];
+    }
+
+    private function viewCreateAccess(string $entity): array
+    {
+        return [
+            Permissions::permission($entity, 'view'),
+            Permissions::permission($entity, 'create'),
         ];
     }
 }

@@ -20,6 +20,7 @@ The landing logic lives in `app/Filament/Pages/AdminLanding.php`.
 ## CRM Code Layout
 - `app/Models/Crm/Sales`: applications, orders, reservations.
 - `app/Models/Crm/Parties`: customers.
+- `app/Models/Crm/Operations`: internal transfers and customer returns.
 - `app/Models/Crm/Assets`: vehicles.
 - `app/Models/Crm/Billing`: invoices, payments.
 - `app/Models/Crm/Reporting`: turnover overview view model.
@@ -37,6 +38,7 @@ The landing logic lives in `app/Filament/Pages/AdminLanding.php`.
 Legend:
 - view = read-only
 - full = view + create + update + delete + export
+- view+create = view + create
 - none = no access
 
 | Capability | Sales | Back Office | Finance | Turnover | Admin |
@@ -49,6 +51,10 @@ Legend:
 | Invoices | view | full | full | view | full |
 | Payments | none | view | full | none | full |
 | Turnover overview | none | none | view | full | full |
+
+Additional CRM permissions:
+- Customer Contracts and Pricing Profiles: Sales (view), Back Office/Admin (full).
+- Internal Transfers and Customer Returns: Sales (view + create), Back Office/Admin (full).
 
 ## Data Model (Schema Overview)
 ### applications
@@ -63,6 +69,12 @@ Legend:
 ### customers
 - id, first_name, last_name, personal_id_or_tax_id, phone, email, address, notes, timestamps, deleted_at
 
+### crm_customer_contracts
+- id, customer_id, contract_number, contract_type, start_date, end_date, status, notes, created_by, timestamps, deleted_at
+
+### crm_customer_pricing_profiles
+- id, customer_id, pricing_type, discount_percent, currency_code, is_active, notes, created_by, timestamps, deleted_at
+
 ### vehicles
 - id, vin_or_serial, type, status, model, year, color, notes, timestamps, deleted_at
 
@@ -72,6 +84,15 @@ Legend:
 ### payments
 - id, invoice_id, amount, status, payment_date, created_by, payment_method, reference_number, notes, timestamps, deleted_at
 
+### internal_transfers
+- id, reference, source_location, destination_location, description, status, requested_by, requested_at, notes, timestamps, deleted_at
+
+### customer_returns
+- id, reference, customer_id, description, status, received_at, reported_by, notes, timestamps, deleted_at
+
+### customer_return_items (optional)
+- id, customer_return_id, item_name, quantity, notes, timestamps
+
 ### audit_logs
 - id, auditable_type, auditable_id, action_type, performed_by, performed_at, before_state, after_state, amount_before, amount_after, currency, notes, ip_address
 
@@ -79,14 +100,20 @@ Legend:
 - period (YYYY-MM), total_invoiced, total_paid, outstanding_amount
 This view is read-only and not writable.
 
+## Unified Document Registry
+The CRM includes a read-only document registry that projects applications, orders, reservations, invoices, and payments into a single list. Each row links back to the original record view page. The registry is built via a query-based projection (`app/Services/Crm/DocumentRegistryQuery.php`) and exposed as a Filament resource (`app/Filament/Resources/Crm/CrmDocumentRegistryResource.php`). It respects the same view permissions as the underlying document types.
+
 ## Relationships (How Records Connect)
 - Customer has many Applications and Orders.
+- Customer has many Customer Contracts and Pricing Profiles.
 - Application belongs to a Customer and may convert into an Order.
 - Order belongs to a Customer and may reference an Application.
 - Reservation belongs to an Order and a Vehicle.
 - Invoice belongs to an Order.
 - Payment belongs to an Invoice.
 - TurnoverOverview is a database view from invoices and payments.
+- CustomerReturn belongs to a Customer and includes optional CustomerReturnItems.
+- InternalTransfer references the requesting user.
 
 ## Status Transitions
 - application_status: new -> reviewed -> approved -> converted; reviewed -> rejected
@@ -94,6 +121,9 @@ This view is read-only and not writable.
 - reservation_status: active -> fulfilled | expired | cancelled
 - invoice_status: draft -> issued -> partially_paid | paid | cancelled; partially_paid -> paid
 - payment_status: pending -> completed | failed; completed -> reversed
+- contract_status: active -> expired | terminated; expired -> terminated
+- internal_transfer_status: draft -> submitted -> acknowledged -> closed; submitted -> cancelled
+- customer_return_status: draft -> reported -> reviewed -> closed; reported -> cancelled
 
 ## Amounts and Totals
 Amounts are stored independently on Orders, Invoices, and Payments. The system does not enforce automatic linkage across totals (e.g., invoice total matching order total), enabling partial invoicing and partial payments.
