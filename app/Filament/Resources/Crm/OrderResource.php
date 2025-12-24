@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Crm;
 
+use App\Enums\Crm\ApplicationStatus;
 use App\Enums\Crm\OrderStatus;
 use App\Filament\Exports\Crm\OrderExporter;
 use App\Filament\Resources\Crm\OrderResource\Pages;
@@ -55,14 +56,47 @@ class OrderResource extends Resource
                     ->required(),
                 Select::make('application_id')
                     ->label('Application')
-                    ->relationship('application', 'id')
+                    ->relationship(
+                        'application',
+                        'id',
+                        modifyQueryUsing: fn (Builder $query) => $query
+                            ->where('status', ApplicationStatus::Approved->value)
+                            ->whereDoesntHave('order')
+                    )
                     ->getOptionLabelFromRecordUsing(fn (Application $record): string => 'Application #' . $record->id)
                     ->searchable()
                     ->preload()
-                    ->nullable(),
+                    ->nullable()
+                    ->rule(function ($component) {
+                        return function (string $attribute, $value, $fail) use ($component): void {
+                            if (blank($value)) {
+                                return;
+                            }
+
+                            $record = $component->getRecord();
+
+                            if ($record instanceof Order && (int) $record->application_id === (int) $value) {
+                                return;
+                            }
+
+                            $isAllowed = Application::query()
+                                ->whereKey($value)
+                                ->where('status', ApplicationStatus::Approved->value)
+                                ->whereDoesntHave('order')
+                                ->exists();
+
+                            if (! $isAllowed) {
+                                $fail('Only approved applications without an order can be linked.');
+                            }
+                        };
+                    }),
                 TextInput::make('order_number')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
+                    ->validationMessages([
+                        'unique' => 'Order number already exists.',
+                    ]),
                 Select::make('status')
                     ->options(static::statusOptions())
                     ->required(),

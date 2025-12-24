@@ -50,6 +50,10 @@ class InternalTransferResource extends Resource
                     ->maxLength(255),
                 Select::make('requested_by')
                     ->relationship('requestedBy', 'name')
+                    ->getOptionLabelFromRecordUsing(
+                        fn ($record): string => '<span style="white-space: nowrap;">' . e($record->name) . '</span>'
+                    )
+                    ->allowHtml()
                     ->default(fn (): ?int => Auth::id())
                     ->searchable()
                     ->preload()

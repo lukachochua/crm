@@ -116,17 +116,12 @@ The CRM includes a read-only document registry that projects applications, order
 - InternalTransfer references the requesting user.
 
 ## Status Transitions
-- application_status: new -> reviewed -> approved -> converted; reviewed -> rejected
-- order_status: draft -> confirmed -> completed | cancelled
-- reservation_status: active -> fulfilled | expired | cancelled
-- invoice_status: draft -> issued -> partially_paid | paid | cancelled; partially_paid -> paid
-- payment_status: pending -> completed | failed; completed -> reversed
-- contract_status: active -> expired | terminated; expired -> terminated
-- internal_transfer_status: draft -> submitted -> acknowledged -> closed; submitted -> cancelled
-- customer_return_status: draft -> reported -> reviewed -> closed; reported -> cancelled
+Status transitions and business gating rules are documented in `docs/Business_Processes.md`.
+Enforcement is handled by enums and `EnforcesStatusTransitions` at the model layer.
 
 ## Amounts and Totals
-Amounts are stored independently on Orders, Invoices, and Payments. The system does not enforce automatic linkage across totals (e.g., invoice total matching order total), enabling partial invoicing and partial payments.
+Amounts are stored independently on Orders, Invoices, and Payments. Business implications
+are documented in `docs/Business_Processes.md`.
 
 ## Runtime Flow
 ### High-Level Runtime Flow (Text Diagram)
@@ -195,68 +190,14 @@ User downloads via /admin/exports/{id}/download
 In development, a queue worker should be running for exports to finish.
 
 ## Invoicing Process (Current Behavior)
-### Concepts and Relationships
-- Order: the commercial commitment. It can have many invoices.
-- Invoice: a billing record linked to one order.
-- Payment: a money movement linked to one invoice.
-- Turnover overview: a monthly aggregation of invoice totals vs. payments.
-
-### Invoice Lifecycle and Status
-- draft -> issued -> partially_paid -> paid
-- issued -> cancelled
-
-Status transitions are enforced by model rules, so invalid jumps are blocked.
-
-### Manual Invoicing (UI Flow)
-Invoices can always be created and managed manually by Back Office or Finance.
-1) Go to Invoicing -> Invoices -> Create.
-2) Select the Order, then fill invoice_number, status, total_amount, issued_at.
-3) Save and update status as payment progresses.
-
-Multiple invoices per order are allowed (partial billing is supported).
-
-### Auto-Invoice on Order Completion
-When an order status changes to `completed`, the system attempts to auto-create
-an invoice with defaults:
-- status: draft
-- issued_at: now()
-- due_date: null
-- notes: "Auto-created when order completed."
-- invoice_number: "INV-YYYYMMDD-####" (randomized per day, uniqueness checked)
-
-#### How the Amount Is Calculated
-Billable total is defined as:
-`billable_total = max(0, order.total_amount - order.discount_amount)`
-
-If there are existing invoices, the auto-invoice uses the remaining amount:
-`remaining = billable_total - sum(existing invoices)`
-
-If remaining <= 0, auto-invoice is skipped.
-
-#### When Auto-Invoice Is Skipped
-Auto-invoice will not create a new invoice if:
-- there is no remaining amount to invoice, OR
-- the order already has invoices and it is fully paid.
-
-"Fully paid" is computed as:
-`sum(completed payments) - sum(reversed payments) >= billable_total`
-
-When auto-invoice is skipped in the web UI, a warning notification is shown.
-In console contexts, notifications are suppressed.
-
-### Payments and Settlement
-Payments are linked to invoices and have statuses:
-- pending -> completed -> reversed
-- pending -> failed
-
-Only completed and reversed payments affect the "fully paid" calculation.
-Pending or failed payments do not count toward settlement.
-
-### Turnover Overview
-Turnover is computed by a database view that sums:
-- total invoiced (from invoices)
-- total paid (from payments)
-It also shows the outstanding amount for each month.
+Business rules (manual invoicing, auto-invoice, and settlement logic) are documented in
+`docs/Business_Processes.md`. Implementation notes:
+- Auto-invoice is triggered by `OrderObserver` when an order status changes to completed.
+- Auto-invoices use status = draft, issued_at = now, due_date = null, and the note
+  "Auto-created when order completed.".
+- Invoice numbers use `INV-YYYYMMDD-####` with a uniqueness check.
+- Auto-invoice warnings are shown in the web UI and suppressed in console contexts.
+- Turnover Overview is a database view that aggregates total invoiced vs. total paid per month.
 
 ### Audit Logging
 Audit logs are recorded when:
@@ -279,11 +220,7 @@ Audit logs use a polymorphic relation and are mapped in `app/Providers/AppServic
 - Multiple invoices per order are allowed; auto-invoice uses remaining balance.
 
 ### Known Limitations / Future Decisions
-- Whether auto-invoicing should trigger on `confirmed` vs `completed`.
-- Whether draft invoices should allow `issued_at = null`.
-- Whether due dates should be set automatically (e.g., +30 days).
-- The definitive invoice number format/sequence for production.
-- Whether auto-invoice should block order completion or only warn/skip.
+See `docs/CRM_Business_Guide.md` for open business decisions.
 
 ## Filament UI Architecture
 - Resources define forms (create/edit) and tables (list) per entity.

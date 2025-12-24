@@ -49,20 +49,8 @@ Legend: full = view/create/update/delete/export, view+update = view + update, vi
 Policy-level scoping restricts hr_manager and department_manager access to their
 department/team records. Superadmin bypasses all scope checks.
 
-## Key Operational Flows
-- Employee lifecycle: create users, attach employees, manage status and documents.
-- Performance: KPI templates -> cycles -> reports -> scoring.
-- Training: sessions -> participants -> results.
-- Recruitment: candidates move through stages.
-- Onboarding: templates -> employee onboarding -> task tracking and overdue alerts.
-- Feedback: cycles -> requests -> answers.
-- Engagement surveys: surveys -> submissions -> answers.
-
-## Notifications
-- Contract expiration reminders (daily).
-- Onboarding delay alerts (daily).
-- Survey open/close notifications (status-driven).
-
-## Technical Reference
-See `docs/HR_Technical_Reference.md` for architecture, data model, status transitions,
-policies, observers, services, and scheduling details.
+## Operational Guidance
+- Business process rules (status flows, automations, notifications):
+  `docs/Business_Processes.md`.
+- Technical architecture, data model, and scheduling details:
+  `docs/HR_Technical_Reference.md`.

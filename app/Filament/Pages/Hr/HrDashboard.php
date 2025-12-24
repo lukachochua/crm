@@ -13,7 +13,7 @@ class HrDashboard extends Dashboard
 {
     protected static bool $isDiscovered = false;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static string $routePath = '/hr';
 

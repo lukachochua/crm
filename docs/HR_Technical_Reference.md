@@ -63,20 +63,13 @@ This document is the technical source of truth for the HR module: architecture, 
 - `survey_answers` belongsTo `survey_submissions` and `survey_questions`.
 
 ## Status Transitions and Enforcement
-- EmployeeStatus: active -> suspended|left; suspended -> active|left; left terminal.
-- KpiReportStatus: draft -> submitted -> manager_reviewed -> closed.
-- KpiCycleStatus: open -> closed.
-- TrainingSessionStatus: scheduled -> completed|cancelled.
-- TrainingAttendanceStatus: invited -> confirmed -> attended|no_show|cancelled.
-- TrainingResultStatus: pending -> passed|failed.
-- RecruitmentStage: application -> interview -> offer -> hired.
-- OnboardingStatus: not_started -> in_progress -> completed; cancel from not_started/in_progress.
-- OnboardingTaskStatus: pending -> in_progress -> completed; pending/in_progress -> blocked; blocked -> in_progress.
-- FeedbackCycleStatus: draft -> open -> closed.
-- FeedbackRequestStatus: pending -> submitted|cancelled; submitted -> closed.
-- SurveyStatus: draft -> open -> closed -> archived.
+Status transitions and business gating rules are documented in `docs/Business_Processes.md`.
+This section describes how enforcement works in code.
 
-All status enums use `HasStatusTransitions`. Models with status fields use `EnforcesStatusTransitions` where possible. For non-standard field names (for example `stage`, `attendance_status`), transitions are validated in model `booted` hooks.
+All status enums use `HasStatusTransitions`. Models with status fields use
+`EnforcesStatusTransitions` where possible. For non-standard field names
+(for example `stage`, `attendance_status`), transitions are validated in model
+`booted` hooks.
 
 ## Permissions and Role Behavior
 Permissions are generated per entity/action (`view`, `create`, `update`, `delete`, `export`).
@@ -109,57 +102,25 @@ Audit logging requires an authenticated user, consistent with CRM behavior.
 - `HrReportService` provides KPI summaries by department and by period (month/quarter/year depending on cycle settings).
 
 ## Notifications and Scheduling
-Notifications use the existing database notification table and Laravel Notifications:
+Business rules (recipients and triggers) are documented in `docs/Business_Processes.md`.
+Implementation details:
 
 - Contract expiration reminders
   - Job: `SendContractExpirationReminders`
   - Trigger: daily schedule
-  - Recipients: users with roles `superadmin`, `hr_admin`, `hr_manager`
-
 - Onboarding delay alerts
   - Job: `SendOnboardingDelayAlerts`
   - Trigger: daily schedule
-  - Recipients: HR roles plus the employee's assigned manager (if any)
-
 - Survey open/close notifications
   - Trigger: EngagementSurvey status change to `open` or `closed`
-  - Recipients: all active employees (via employee -> user)
 
 Scheduling is configured in `routes/console.php` and uses the existing scheduler runtime.
 
-## HR Functionality Flow
-### Employee Management
-- Create `users` first (via existing CRM user flow) then attach an `employees` record.
-- Contract expiration is tracked via `contract_end_date`, with reminders sent by the scheduled job.
-- Employee documents are stored with metadata and file path via Laravel filesystem.
-
-### KPI and Performance
-- KPI templates are defined per position, with weighted items.
-- KPI cycles define reporting periods.
-- KPI reports are created per employee/template/cycle, with self and manager scores.
-- `KpiScoreCalculator` computes weighted totals and stores raw + computed scores.
-
-### Training
-- Training sessions define calendar events, optional trainer, and status.
-- Participants track attendance status, result status, and optional score.
-
-### Recruitment
-- Candidates move through a strict pipeline: application -> interview -> offer -> hired.
-- Stage transitions are enforced by enum validation on update.
-
-### Onboarding
-- Onboarding templates define reusable tasks.
-- Employee onboarding tracks status and due dates.
-- Task progress is tracked per employee onboarding; overdue tasks trigger alerts.
-
-### 360 Feedback
-- Feedback cycles define periods.
-- Requests link a subject employee to a rater with a rater type.
-- Answers store per-question scores and comments.
-
-### Engagement Surveys
-- Surveys define windows (opens/closes) and question sets.
-- Submissions and answers are linked to users; anonymity is a reporting concern (not storage).
+## HR Functionality Implementation Notes
+Operational flows and status gates are documented in `docs/Business_Processes.md`.
+Implementation highlights include:
+- KPI score recalculation via `KpiScoreCalculator` triggered by `KpiReportItemObserver`.
+- Audit logging via `AuditLogger` in HR observers.
 
 ## Filament UI Integration
 The HR module appears under a single "HR" navigation group. Resources follow CRM UI patterns

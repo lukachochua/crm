@@ -51,6 +51,10 @@ class CustomerReturnResource extends Resource
                     ->nullable(),
                 Select::make('reported_by')
                     ->relationship('reportedBy', 'name')
+                    ->getOptionLabelFromRecordUsing(
+                        fn ($record): string => '<span style="white-space: nowrap;">' . e($record->name) . '</span>'
+                    )
+                    ->allowHtml()
                     ->default(fn (): ?int => Auth::id())
                     ->searchable()
                     ->preload()

@@ -34,7 +34,11 @@ class OrdersRelationManager extends RelationManager
             ->schema([
                 TextInput::make('order_number')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
+                    ->validationMessages([
+                        'unique' => 'Order number already exists.',
+                    ]),
                 Select::make('status')
                     ->options($this->statusOptions())
                     ->required(),

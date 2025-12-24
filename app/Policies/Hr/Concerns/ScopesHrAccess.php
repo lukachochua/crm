@@ -37,8 +37,12 @@ trait ScopesHrAccess
         return Employee::query()->where('user_id', $user->id)->first();
     }
 
-    protected function scopedEmployee(User $user, Employee $employee): bool
+    protected function scopedEmployee(User $user, ?Employee $employee): bool
     {
+        if (! $employee) {
+            return false;
+        }
+
         $managerEmployee = $this->managerEmployee($user);
         if (! $managerEmployee) {
             return false;
@@ -51,15 +55,23 @@ trait ScopesHrAccess
         return $employee->department_id === $managerEmployee->department_id;
     }
 
-    protected function scopedEmployeeById(User $user, int $employeeId): bool
+    protected function scopedEmployeeById(User $user, ?int $employeeId): bool
     {
+        if (! $employeeId) {
+            return false;
+        }
+
         $employee = Employee::query()->find($employeeId);
 
         return $employee ? $this->scopedEmployee($user, $employee) : false;
     }
 
-    protected function scopedEmployeeByUserId(User $user, int $subjectUserId): bool
+    protected function scopedEmployeeByUserId(User $user, ?int $subjectUserId): bool
     {
+        if (! $subjectUserId) {
+            return false;
+        }
+
         $employee = Employee::query()->where('user_id', $subjectUserId)->first();
 
         return $employee ? $this->scopedEmployee($user, $employee) : false;

@@ -4,81 +4,14 @@
 This guide explains the CRM's real-world business flow and provides role-by-role operating instructions.
 
 ## Executive Summary
-The CRM tracks the full commercial flow:
-1) Customer inquiry (Application)
-2) Commercial commitment (Order)
-3) Asset allocation (Reservation)
-4) Billing (Invoice)
-5) Cash collection (Payment)
-6) Financial reporting (Turnover Overview)
+The CRM tracks the commercial flow from application to payment and turnover reporting. Detailed
+process rules (status gates, automations, calculations) live in `docs/Business_Processes.md`.
+Technical architecture and the data model live in `docs/CRM_Technical_Reference.md`.
 
-Each step is represented by a record with a defined status. Roles have specific permissions to create, update, and export data. Audit logs record key changes.
-
-## End-to-End Flow (Real Life)
-1) A customer submits a request. Sales creates an Application.
-2) Sales reviews and qualifies the request, moving the application through statuses.
-3) Sales converts the approved application into an Order (manual action).
-4) The order is confirmed and delivered. When an order becomes Completed, the system auto-creates a draft Invoice for the remaining billable amount.
-5) Back Office or Finance finalizes the invoice (status progression to issued).
-6) Finance records Payments against invoices as money arrives.
-7) The Turnover Overview aggregates monthly invoiced vs. paid totals.
-
-This is a flexible flow: orders can exist without applications, invoices can be created manually, and multiple invoices can be issued for one order.
-
-## Business Objects and Meanings
-Allowed transitions are defined in `docs/CRM_Technical_Reference.md`.
-
-### Application (customer request)
-Statuses and meaning:
-- new: intake logged.
-- reviewed: qualified by Sales.
-- approved: go-ahead granted.
-- converted: an order has been created.
-- rejected: not pursued.
-
-### Order (commercial commitment)
-Statuses and meaning:
-- draft: prepared but not committed.
-- confirmed: accepted by business and customer.
-- completed: work/delivery finished.
-- cancelled: closed without fulfillment.
-
-### Reservation (asset allocation)
-Statuses and meaning:
-- active: asset held for the order.
-- fulfilled: asset delivered/used.
-- expired: reservation lapsed.
-- cancelled: reservation voided.
-
-### Invoice (billing document)
-Statuses and meaning:
-- draft: internal preparation.
-- issued: formally sent/recognized for billing.
-- partially_paid: some payment received.
-- paid: fully settled.
-- cancelled: voided bill.
-
-### Payment (cash movement)
-Statuses and meaning:
-- pending: initiated but not settled.
-- completed: received.
-- reversed: refunded or chargeback.
-- failed: did not settle.
-
-### Customer Contract (commercial metadata)
-Tracks contract numbers, types, dates, and status per customer. No billing logic or execution lives here.
-
-### Customer Pricing Profile (commercial metadata)
-Stores pricing type, discount, and currency metadata per customer. No calculations are enforced by the CRM.
-
-### Unified Document Registry (read-only)
-Provides a single list of CRM documents (applications, orders, reservations, invoices, payments). Clicking a row opens the original record.
-
-### Internal Transfer (document-only)
-Records intent to move items between locations. This is a CRM record only and does not affect inventory or finance.
-
-### Customer Return (document-only)
-Records a customer return notice with optional item descriptions. This is a CRM record only and does not affect inventory or finance.
+## Where to Find Process Rules
+- Status transitions, conversion rules, auto-invoicing logic, and amount handling:
+  `docs/Business_Processes.md`.
+- Permissions matrix and schema details: `docs/CRM_Technical_Reference.md`.
 
 ## Roles and Responsibilities (Business View)
 
@@ -113,16 +46,6 @@ Primary role: reporting.
 
 ### Admin
 Full access to all modules and actions.
-
-## Common UI Behavior (All Roles)
-- Login at `/admin`.
-- Use list Search, Filters, and Sorting to find records.
-- Status badges show the current state and color.
-- Invalid status transitions are blocked with a validation message.
-- Exports appear only if your role has full access for that module.
-
-## Pricing and Amounts
-Amounts are stored independently on Orders, Invoices, and Payments. The current system does not enforce automatic linkage across these totals (e.g., invoice total matching order total). This supports partial invoicing and partial payments.
 
 ## Role Manuals
 Full permission details live in `docs/CRM_Technical_Reference.md`.
@@ -278,13 +201,6 @@ Full permission details live in `docs/CRM_Technical_Reference.md`.
 #### Step-by-Step Flow
 - Perform any of the Sales, Back Office, Finance, or Turnover flows.
 
-## Invoicing Logic (High-Level Summary)
-- Invoices can be created manually at any time by authorized roles (Back Office or Finance).
-- When an order status changes to Completed, the system attempts to auto-create a draft invoice for the remaining billable amount.
-- If the order is already fully paid or fully invoiced, auto-invoice is skipped with a warning.
-
-See `docs/CRM_Technical_Reference.md` for exact calculations and defaults.
-
 ## Hand-Offs and Accountability
 - Sales to Back Office: application approval and order creation.
 - Back Office to Finance: invoices prepared and issued.
@@ -307,13 +223,9 @@ See `docs/CRM_Technical_Reference.md` for exact calculations and defaults.
 7) Payments are recorded as they arrive.
 8) Leadership sees monthly invoiced vs. paid totals in Turnover Overview.
 
-## Current Flexibilities (Intentional)
-- Orders can exist without an application (direct sales).
-- Multiple invoices per order (partial billing).
-- Manual overrides for invoice totals and dates.
-
 ## Open Business Decisions (Potential Future Enhancements)
 - Confirm whether auto-invoicing should occur on confirmed vs completed.
 - Decide if due dates should be set automatically (e.g., +30 days).
+- Decide whether draft invoices should allow issued_at = null.
 - Decide on a fixed invoice numbering sequence for production.
 - Decide if auto-invoice should block order completion on edge cases.

@@ -37,7 +37,8 @@ Tip: `composer run dev` runs server, queue, logs, and Vite together.
 - `database/seeders`: roles and permissions seeding.
 - `docs`: business and technical documentation.
 
-See `docs/CRM_Technical_Reference.md` for runtime behavior and `docs/HR_Module.md` for HR details.
+See `docs/Business_Processes.md` for consolidated CRM + HR process rules, `docs/CRM_Technical_Reference.md`
+for CRM runtime behavior, and `docs/HR_Module.md` for HR details.
 
 ## CRM Evolution (Phases 1-3)
 - Phase 1: Customer contracts and pricing metadata (no billing logic).

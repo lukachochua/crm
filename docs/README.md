@@ -1,8 +1,9 @@
 # Documentation Index
 
 ## Business and User Guides
-- `docs/CRM_Business_Guide.md`: Business flow, role responsibilities, and step-by-step CRM usage.
-- `docs/HR_Module.md`: HR module overview, permissions, flows, and operations.
+- `docs/Business_Processes.md`: Consolidated CRM + HR process rules, status gates, and automations.
+- `docs/CRM_Business_Guide.md`: Role responsibilities and step-by-step CRM usage.
+- `docs/HR_Module.md`: HR module overview, navigation, and permissions.
 
 ## Technical Reference
 - `docs/CRM_Technical_Reference.md`: Architecture, data model, runtime flows, and invoicing behavior.
